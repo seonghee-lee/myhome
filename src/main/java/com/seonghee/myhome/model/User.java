@@ -28,6 +28,7 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    //@OneToMany(mappedBy="user", fetch = FetchType.LAZY)
     private List<Board> boards = new ArrayList<>();
 
 }
