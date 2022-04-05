@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head(title)">
     <!-- Required meta tags -->
@@ -13,7 +13,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="navbar-top.css" th:href="@{/navbar-top.css}" rel="stylesheet">
+    <link href="navbar-top.css" th:href="@{/css/navbar-top.css}" rel="stylesheet">
     <title th:text="${title}">Hello, Spring Boot!</title>
 </head>
 
@@ -38,10 +38,23 @@
                 <!--                        <a class="nav-link disabled">Disabled</a>-->
                 <!--                    </li>-->
             </ul>
-            <!--                <form class="d-flex">-->
-            <!--&lt;!&ndash;                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">&ndash;&gt;-->
-            <!--&lt;!&ndash;                    <button class="btn btn-outline-success" type="submit">Search</button>&ndash;&gt;-->
-            <!--                </form>-->
+
+<!--                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+
+            <!--로그인이 되지 않은 사용자만 보이도록-->
+            <a sec:authorize="!isAuthenticated()" class="btn btn-outline-success mx-2" type="submit"
+               th:href="@{/account/login}">로그인</a>
+            <a sec:authorize="!isAuthenticated()" class="btn btn-outline-success mx-2" type="submit"
+               th:href="@{/account/register}">회원가입</a>
+
+            <!--로그인 된 사용자만 보이도록-->
+            <form sec:authorize="isAuthenticated()" class="d-flex" th:action="@{/logout}" method="post">
+                <!--<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+                <span sec:authentication="name" class="text-white mx-2 my-2">사용자</span>
+                <span sec:authentication="principal.authorities" class="text-white mx-2 my-2">권한</span>
+
+                <button class="btn btn-outline-success" type="submit">로그아웃</button>
+            </form>
         </div>
     </div>
 </nav>
