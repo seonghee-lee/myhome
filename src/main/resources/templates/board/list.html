@@ -61,7 +61,7 @@
             <tr th:each="board:${boards}">
                 <td th:text="${board.id}" width="20%">1</td>
                 <td><a th:text="${board.title}" th:href="@{/board/form(id=${board.id})}" width="50%">Mark</a></td>
-                <td width="30%">아무개</td>
+                <td th:text="${board.user.username}" width="30%">아무개</td>
             </tr>
         </tbody>
     </table>

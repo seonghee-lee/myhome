@@ -2,12 +2,15 @@ package com.seonghee.myhome.controller;
 
 import com.seonghee.myhome.model.Board;
 import com.seonghee.myhome.repository.BoardRepository;
+import com.seonghee.myhome.service.BoardService;
 import com.seonghee.myhome.validator.BoardValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +29,9 @@ public class BoardController {
 
     @Autowired  //사용하기 위해서는 BoardValidator 클래스에 @Component가 되어있어야한다.
     private BoardValidator boardValidator;
+
+    @Autowired
+    private BoardService boardService;
 
     @GetMapping("/list")
     public String list(Model model, @PageableDefault(size = 2) Pageable pageable,
@@ -59,14 +65,16 @@ public class BoardController {
 
     @PostMapping("/form")
     //public String formSubmit(@ModelAttribute Board board, Model model){
-    public String formSubmit(@Validated Board board, BindingResult bindingResult){
+    public String formSubmit(@Validated Board board, BindingResult bindingResult, Authentication authentication){
         //유효성 검증
         boardValidator.validate(board, bindingResult);
         if(bindingResult.hasErrors()){
             return "board/form";
         }
+
         //저장
-        boardRepository.save(board);
+        String username = authentication.getName(); //spring security에서 제공해주는 인증정보를 통해 현재 접속 username을 구하고, usertable 접근 시 이걸 사용하자.
+        boardService.save(username, board);
         return "redirect:/board/list";  //저장된 값을 뿌려주기 위해 redirect 키워드를 적어준다.
     }
 

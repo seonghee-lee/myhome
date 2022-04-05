@@ -49,8 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()   //api테스트하기 위해 disable함. 보안상 좋지 않음.
                 .authorizeRequests()
-                    .antMatchers("/","/account/register","/css/**").permitAll()  //permitAll(): 누구나 접근 가능: 로그인 없이도.
+                    .antMatchers("/","/account/register","/css/**", "/api/**").permitAll()  //permitAll(): 누구나 접근 가능: 로그인 없이도.
                     .anyRequest().authenticated()   //위 url을 제외한 모든 요청은 반드시 로그인을 해야한다.
                     .and()
                 .formLogin()
